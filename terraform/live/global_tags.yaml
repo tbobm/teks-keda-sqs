@@ -1,4 +1,4 @@
 ---
-Owner: particuleio
-Terraform: "0.14"
-Project: teks-tf
+Owner: tbobm
+Terraform: "0.15"
+Project: teks-keda
