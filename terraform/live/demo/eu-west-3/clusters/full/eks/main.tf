@@ -37,14 +37,14 @@ module "eks" {
   ]
   kubeconfig_aws_authenticator_additional_args = []
 
-  cluster_version           = "1.19"
+  cluster_version           = "1.20"
   cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   node_groups = {
     "default-${local.aws_region}" = {
       create_launch_template = true
       desired_capacity       = 1
-      max_capacity           = 5
+      max_capacity           = 2
       min_capacity           = 1
       instance_types         = ["t3a.medium", "t3.medium"]
       disk_size              = 50
@@ -52,19 +52,6 @@ module "eks" {
         pool = "default"
       }
       capacity_type = "ON_DEMAND"
-    }
-    "dedicated-${local.aws_region}" = {
-      create_launch_template = true
-      desired_capacity       = 1
-      max_capacity           = 5
-      min_capacity           = 1
-      instance_types         = ["t3a.medium", "t3.medium"]
-      disk_size              = 50
-      kubelet_extra_args     = "--register-with-taints=dedicated=spot:NoSchedule"
-      k8s_labels = {
-        pool = "dedicated"
-      }
-      capacity_type = "SPOT"
     }
   }
 }
