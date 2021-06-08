@@ -22,7 +22,7 @@ jobs:
         name: Set Docker metadata
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/tbobm/teks-keda-sqs-producder
+          images: ghcr.io/tbobm/teks-keda-sqs-consumer
           tags: |
             type=ref,event=branch
             type=ref,event=pr
