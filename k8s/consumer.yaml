@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: consumer
+  name: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      serviceAccountName: aws-sqs
+      containers:
+        - image: ghcr.io/tbobm/teks-keda-sqs-consumer:main
+          name: consumer
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: "eu-west-3"
+            - name: SQS_QUEUE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sqs-queue
+                  key: SQS_QUEUE_URL

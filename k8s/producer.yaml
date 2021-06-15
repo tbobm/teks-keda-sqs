@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: producer
+  name: producer
+spec:
+  completions: 20
+  parallelism: 20
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      serviceAccountName: aws-sqs
+      restartPolicy: Never
+      containers:
+        - image: ghcr.io/tbobm/teks-keda-sqs-producer:main
+          name: producer
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: "eu-west-3"
+            - name: SQS_QUEUE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sqs-queue
+                  key: SQS_QUEUE_URL
