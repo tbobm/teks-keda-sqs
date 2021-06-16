@@ -1,0 +1,33 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: sqs-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: awsAccessKeyID
+      name: sqs-admin
+      key: AWS_ACCESS_KEY_ID
+    - parameter: awsSecretAccessKey
+      name: sqs-admin
+      key: AWS_SECRET_ACCESS_KEY
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: sqs-consumer
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: consumer
+  triggers:
+    - type: aws-sqs-queue
+      authenticationRef:
+        name: sqs-trigger-auth
+      metadata:
+        queueName: sqs-keda-demo
+        queueURL: https://sqs.eu-west-3.amazonaws.com/111111111111/sqs-keda-demo
+        queueLength: '5'
+        identityOwner: pod
+        awsRegion: 'eu-west-3'
